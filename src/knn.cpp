@@ -16,13 +16,11 @@ struct Qb {
     int c_tds;
     int c_yds;
     int c_ints;
-    int c_wins;
 
     // NFL stats
     int n_tds;
     int n_yds;
     int n_ints;
-    int n_wins;
 
     // Both will be computed later
     bool success;
@@ -51,7 +49,6 @@ void isSuccessful(Qb& q) {
     if (q.n_tds >= 27) count++;
     if (q.n_yds >= 3000) count++;
     if (q.n_ints >= 10) count++;
-    if (q.n_wins >= 10) count++;
     q.success = (count >= 3);
 }
 
@@ -60,8 +57,7 @@ void euclideanDistance(Qb& q, const vector<int>& v) {
     q.distance =  sqrt(
         (v[0]-q.c_tds)*(v[0]-q.c_tds) +
         (v[1]-q.c_yds)*(v[1]-q.c_yds) +
-        (v[2]-q.c_ints)*(v[2]-q.c_ints )+
-        (v[3]-q.c_wins)*(v[3]-q.c_wins)
+        (v[2]-q.c_ints)*(v[2]-q.c_ints)
     );
 }
 
