@@ -15,28 +15,44 @@ WELCOME TO QB SUCCESS PREDICTOR
 ======[MENU]======
 1. Linear Regression Percentage
 2. K-NN Percentage
+3. Exit
 ```
 1. Linear Regression example:
 ```c++
-Enter your average touchdowns:
-25
-Enter your average yards:
-3100
-Enter your average interceptions:
-8
-Estimated NFL success likelihood: 62.30%
+1
+Enter your average touchdowns: 32
+Enter your average yards: 4500
+Enter your average interceptions: 3
+
+Reading data from ../footballdata/merged_stats_reduced_with_synth.csv...
+Loaded 74202 data points.
+Running gradient descent...
+RMSE: 11.8855
+Regression equation: y = 0.000634705x + 25.5054
+Predicted NFL average touchdowns: 25.5257
+Reading data from ../footballdata/merged_stats_reduced_with_synth.csv...
+Loaded 74202 data points.
+Running gradient descent...
+RMSE: 1460.8
+Regression equation: y = 0.209719x + 2287.52
+Predicted NFL average yards: 3231.26
+Reading data from ../footballdata/merged_stats_reduced_with_synth.csv...
+Loaded 74202 data points.
+Running gradient descent...
+RMSE: 7.50334
+Regression equation: y = 9.21329e-05x + 12.9784
+Predicted NFL average interceptions: 12.9786
 ```
 
 2. K-NN example:
 
 ```c++
-Enter your average touchdowns:
-25
-Enter your average yards:
-3100
-Enter your average interceptions:
-8
-Estimated NFL success likelihood: 62.30%
+2
+Enter your average touchdowns: 32
+Enter your average yards: 4500
+Enter your average interceptions: 3
+
+Estimated NFL success likelihood: 48.00%
 ```
 
 <h2> Contributing </h2>
