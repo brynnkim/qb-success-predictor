@@ -12,7 +12,7 @@ Select from the following menu:
 
 ```c++
 WELCOME TO QB SUCCESS PREDICTOR
-======[MENU]======
+============[MENU]============
 1. Linear Regression Percentage
 2. K-NN Percentage
 3. Exit
