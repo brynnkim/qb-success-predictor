@@ -56,8 +56,10 @@ RegressionResult backpropagation(float m, float b, vector<float>& inputs, vector
 
 // Run gradient descent
 RegressionResult gradient_descent_runner(vector<float>& inputs, vector<float>& actual_outputs, int num_iterations) {
-    float b = 0.0;
-    float m = 0.0;
+    float b = 0.0f;
+    float m = 0.0f;
+
+    for (float& n : inputs) n /= 1000.0f;
 
     for (int i = 0; i < num_iterations; i++) {
         RegressionResult result = backpropagation(m, b, inputs, actual_outputs);
@@ -65,7 +67,7 @@ RegressionResult gradient_descent_runner(vector<float>& inputs, vector<float>& a
         m = result.slope;
     }
 
-    return {m, b};
+    return {m / 1000.0f, b};
 }
 
 // Read CSV file and extract two columns by index
@@ -123,45 +125,66 @@ void print_results(float slope, float intercept, float rmse) {
 }
 
 // Main function
-void run() {
+void run(vector<float>& user) {
     // Example: predicting NFL touchdowns (column 4) from college touchdowns (column 1)
     // Column indices: 0=Name, 1=college_avg_touchdowns, 2=college_avg_yards, 3=college_avg_interceptions
     //                 4=nfl_avg_touchdowns, 5=nfl_avg_yards, 6=nfl_avg_interceptions
 
-    string filename = "merged_stats_reduced.csv";
-    int input_column = 1;  // college_avg_touchdowns
-    int output_column = 4; // nfl_avg_touchdowns
-
+    string filename = "../footballdata/merged_stats_reduced_with_synth.csv";
+    int input_column_td = 1;  // college_avg_touchdowns
+    int output_column_td = 4; // nfl_avg_touchdowns
     cout << "Reading data from " << filename << "..." << endl;
-    auto [x, y] = get_data(filename, input_column, output_column);
-
-    if (x.empty() || y.empty()) {
+    auto [x_td, y_td] = get_data(filename, input_column_td, output_column_td);
+    if (x_td.empty() || y_td.empty()) {
         cerr << "Error: No data loaded." << endl;
         return;
     }
-
-    int data_points = x.size();
-    cout << "Loaded " << data_points << " data points." << endl;
+    cout << "Loaded " << x_td.size() << " data points." << endl;
     cout << "Running gradient descent..." << endl;
+    RegressionResult result_td = gradient_descent_runner(x_td, y_td, 10000);
+    float slope_td = result_td.slope;
+    float intercept_td = result_td.intercept;
+    float mse_td = cost_function(slope_td, intercept_td, x_td, y_td);
+    float rmse_td = sqrt(mse_td);
+    print_results(slope_td, intercept_td, rmse_td);
+    float prediction_td = slope_td * user[0] + intercept_td;
+    cout << "Predicted NFL average touchdowns: " << prediction_td << endl;
 
-    RegressionResult result = gradient_descent_runner(x, y, 10000);
-    float slope = result.slope;
-    float intercept = result.intercept;
+    int input_column_yd = 2;  // college_avg_yards
+    int output_column_yd = 5; // nfl_avg_yards
+    cout << "Reading data from " << filename << "..." << endl;
+    auto [x_yd, y_yd] = get_data(filename, input_column_yd, output_column_yd);
+    if (x_yd.empty() || y_yd.empty()) {
+        cerr << "Error: No data loaded." << endl;
+        return;
+    }
+    cout << "Loaded " << x_yd.size() << " data points." << endl;
+    cout << "Running gradient descent..." << endl;
+    RegressionResult result_yd = gradient_descent_runner(x_yd, y_yd, 10000);
+    float slope_yd = result_yd.slope;
+    float intercept_yd = result_yd.intercept;
+    float mse_yd = cost_function(slope_yd, intercept_yd, x_yd, y_yd);
+    float rmse_yd = sqrt(mse_yd);
+    print_results(slope_yd, intercept_yd, rmse_yd);
+    float prediction_yd = slope_yd * user[1] + intercept_yd;
+    cout << "Predicted NFL average yards: " << prediction_yd << endl;
 
-    float mse = cost_function(slope, intercept, x, y);
-    float rmse = sqrt(mse);
-
-    print_results(slope, intercept, rmse);
-
-    // Example prediction
-    cout << "\nExample prediction:" << endl;
-    float sample_input = 25.0;
-    float prediction = slope * sample_input + intercept;
-    cout << "If college_avg_touchdowns = " << sample_input
-         << ", predicted nfl_avg_touchdowns = " << prediction << endl;
-}
-
-int main() {
-    run();
-    return 0;
+    int input_column_int = 3;  // college_avg_interceptions
+    int output_column_int = 6; // nfl_avg_interceptions
+    cout << "Reading data from " << filename << "..." << endl;
+    auto [x_int, y_int] = get_data(filename, input_column_int, output_column_int);
+    if (x_int.empty() || y_int.empty()) {
+        cerr << "Error: No data loaded." << endl;
+        return;
+    }
+    cout << "Loaded " << x_int.size() << " data points." << endl;
+    cout << "Running gradient descent..." << endl;
+    RegressionResult result_int = gradient_descent_runner(x_int, y_int, 10000);
+    float slope_int = result_int.slope;
+    float intercept_int = result_int.intercept;
+    float mse_int = cost_function(slope_int, intercept_int, x_int, y_int);
+    float rmse_int = sqrt(mse_int);
+    print_results(slope_int, intercept_int, rmse_int);
+    float prediction_int = slope_int * user[2] + intercept_int;
+    cout << "Predicted NFL average interceptions: " << prediction_int << endl;
 }

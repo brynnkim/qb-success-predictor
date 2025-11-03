@@ -46,10 +46,10 @@ vector<string> read_csv(const string& row) {
 // Determines and updates success of a QB
 void isSuccessful(Qb& q) {
     int count = 0;
-    if (q.n_tds >= 27) count++;
-    if (q.n_yds >= 3000) count++;
-    if (q.n_ints >= 10) count++;
-    q.success = (count >= 3);
+    if (q.n_tds >= 25) count++;
+    if (q.n_yds >= 2900) count++;
+    if (q.n_ints <= 12) count++;
+    q.success = (count >= 2);
 }
 
 // Determines and updates Euclidean distance of a QB (K-NN algorithm)
@@ -63,7 +63,7 @@ void euclideanDistance(Qb& q, const vector<int>& v) {
 
 // Assume all data is organized and pushed into KNN in main.cpp
 // Assume k is always smaller than the size of the data set (<= 100,000 approx.)
-double KNN(vector<Qb>& qb, const vector<int>& user, int k = 1000) {
+double KNN(vector<Qb>& qb, const vector<int>& user, int k = 100) {
     // Compute success & distance for all QBs
     for (auto& q : qb) {
         isSuccessful(q);

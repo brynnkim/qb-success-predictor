@@ -1,5 +1,5 @@
 #include "knn.cpp"
-// Include linear regression file here (Nirvan)
+#include "Linear_regression.cpp"
 
 #include <iostream>
 #include <fstream>
@@ -23,9 +23,7 @@ static vector<string> split_csv(const string& line) {
 static int to_int_or_zero(const string& s) {
     try {
         if (s.empty()) return 0;
-        size_t idx = 0;
-        long long v = stoll(s, &idx);
-        if (idx != s.size()) return 0; 
+        long long v = llround(stod(s));
         if (v > numeric_limits<int>::max()) return numeric_limits<int>::max();
         if (v < numeric_limits<int>::min()) return numeric_limits<int>::min();
         return static_cast<int>(v);
@@ -37,12 +35,10 @@ static int to_int_or_zero(const string& s) {
 static const char* COL_C_TD   = "college_avg_touchdowns";
 static const char* COL_C_YDS  = "college_avg_yards";
 static const char* COL_C_INT  = "college_avg_interceptions";
-static const char* COL_C_WINS = "college_avg_wins";
 
 static const char* COL_N_TD   = "nfl_avg_touchdowns";
 static const char* COL_N_YDS  = "nfl_avg_yards";
 static const char* COL_N_INT  = "nfl_avg_interceptions";
-static const char* COL_N_WINS = "nfl_avg_wins";
 
 vector<Qb> loadQbCsv(const string& path) {
     vector<Qb> rows;
@@ -78,12 +74,10 @@ vector<Qb> loadQbCsv(const string& path) {
         q.c_tds  = to_int_or_zero(get(fields, COL_C_TD));
         q.c_yds  = to_int_or_zero(get(fields, COL_C_YDS));
         q.c_ints = to_int_or_zero(get(fields, COL_C_INT));
-        q.c_wins = to_int_or_zero(get(fields, COL_C_WINS));
 
         q.n_tds  = to_int_or_zero(get(fields, COL_N_TD));
         q.n_yds  = to_int_or_zero(get(fields, COL_N_YDS));
         q.n_ints = to_int_or_zero(get(fields, COL_N_INT));
-        q.n_wins = to_int_or_zero(get(fields, COL_N_WINS));
 
         q.success = false;
         q.distance = 0.0;
@@ -95,48 +89,59 @@ vector<Qb> loadQbCsv(const string& path) {
     return rows;
 }
 
-int main () {
-    ios::sync_with_stdio(false);
-    cin.tie(nullptr);
-
-    string path = "../footballdata/merged_stats_reduced.csv";
+void display_menu() {
+    string path = "../footballdata/merged_stats_reduced_with_synth.csv";
     cout << "Trying: " << path << "\n";
 
     vector<Qb> dataset = loadQbCsv(path);
-    if (dataset.empty()) return 1;
+    if (dataset.empty()) return;
 
     cout << "WELCOME TO QB SUCCESS PREDICTOR\n";
-    cout << "======[MENU]======\n";
+    cout << "============[MENU]============\n";
     cout << "1. Linear Regression Percentage\n";
     cout << "2. K-NN Percentage\n";
-
+    cout << "3. Exit\n";
     string input;
     cin >> input;
 
     if (input == "1") {
-        int user_td, user_yards, user_ints, user_wins;
+        float user_td, user_yards, user_ints;
         cout << "Enter your average touchdowns: ";     cin >> user_td;
         cout << "Enter your average yards: ";          cin >> user_yards;
         cout << "Enter your average interceptions: ";  cin >> user_ints;
-        cout << "Enter your average wins: ";           cin >> user_wins;
-        //linear regression
-        cout << "[Linear Regression not implemented yet]\n";
-    } 
+        cout << "\n";
+        vector<float> user = { user_td, user_yards, user_ints };
+        run(user);
+        cout << "\n";
+        display_menu();
+    }
     else if (input == "2") {
-        int user_td, user_yards, user_ints, user_wins;
+        int user_td, user_yards, user_ints;
         cout << "Enter your average touchdowns: ";     cin >> user_td;
         cout << "Enter your average yards: ";          cin >> user_yards;
         cout << "Enter your average interceptions: ";  cin >> user_ints;
-        cout << "Enter your average wins: ";           cin >> user_wins;
+        cout << "\n";
 
-        vector<int> user = { user_td, user_yards, user_ints, user_wins };
-        int k = 1000;
+        vector<int> user = { user_td, user_yards, user_ints };
+        int k = 100;
         double result = KNN(dataset, user, k);
+        cout.setf(ios::fixed);
+        cout.precision(2);
         cout << "Estimated NFL success likelihood: " << result << "%\n";
-    } 
-    else {
+        cout << "\n";
+        display_menu();
+    }
+    else if (input == "3") {
+        return;
+    } else {
         cout << "Invalid selection.\n";
     }
+}
 
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+
+    display_menu();
     return 0;
 }
