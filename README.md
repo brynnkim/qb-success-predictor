@@ -47,7 +47,7 @@ to discuss what you would like to change.
 
 <details>
 <summary>
-Copyright (c) 2025 Brynn Kim, Sharelene Kho, Nirvan</summary>
+Copyright (c) 2025 Brynn Kim, Sharelene Kho, Nirvan Shrestha </summary>
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
