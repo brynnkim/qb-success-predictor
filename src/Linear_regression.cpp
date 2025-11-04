@@ -14,7 +14,7 @@ struct RegressionResult {
     float intercept;
 };
 
-// Calculate the cost function (Mean Squared Error)
+// Calculate cost function
 float cost_function(float m, float b, vector<float>& inputs, vector<float>& actual_outputs) {
     float error_percentage = 0.0;
     int N = inputs.size();
@@ -31,7 +31,7 @@ float cost_function(float m, float b, vector<float>& inputs, vector<float>& actu
     return error_percentage;
 }
 
-// Perform backpropagation and return updated parameters
+// backpropagation and return updated parameters
 RegressionResult backpropagation(float m, float b, vector<float>& inputs, vector<float>& actual_outputs) {
     float learning_rate = 0.001;
     float b_gradient = 0.0;
@@ -108,7 +108,6 @@ pair<vector<float>, vector<float>> get_data(string& file_name, int input_col_ind
                 x.push_back(input_val);
                 y.push_back(output_val);
             } catch (const exception& e) {
-                // Skip rows with invalid data
                 continue;
             }
         }
@@ -118,7 +117,7 @@ pair<vector<float>, vector<float>> get_data(string& file_name, int input_col_ind
     return {x, y};
 }
 
-// Print the results
+//Print the results
 void print_results(float slope, float intercept, float rmse) {
     cout << "RMSE: " << rmse << endl;
     cout << "Regression equation: y = " << slope << "x + " << intercept << endl;
@@ -126,10 +125,6 @@ void print_results(float slope, float intercept, float rmse) {
 
 // Main function
 void run(vector<float>& user) {
-    // Example: predicting NFL touchdowns (column 4) from college touchdowns (column 1)
-    // Column indices: 0=Name, 1=college_avg_touchdowns, 2=college_avg_yards, 3=college_avg_interceptions
-    //                 4=nfl_avg_touchdowns, 5=nfl_avg_yards, 6=nfl_avg_interceptions
-
     string filename = "../footballdata/merged_stats_reduced_with_synth.csv";
     int input_column_td = 1;  // college_avg_touchdowns
     int output_column_td = 4; // nfl_avg_touchdowns
